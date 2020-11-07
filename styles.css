@@ -50,3 +50,8 @@ button {
   height: 100%;
   width: 100%;
 }
+
+.gallery p {
+  text-align: center;
+  font-size: 2rem;
+}

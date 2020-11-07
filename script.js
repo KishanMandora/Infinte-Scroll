@@ -12,7 +12,11 @@ const getImgs = async () => {
     const img = document.createElement("img");
     img.setAttribute("src", photo.urls.regular);
 
+    const user = document.createElement("p");
+
     gallery.appendChild(img);
+    user.innerText = `${photo.user.first_name} ${photo.user.last_name}`;
+    gallery.appendChild(user);
   });
 };
 
