@@ -11,7 +11,6 @@ const count = 20;
 let query = "";
 
 const apiKey = "S0mkkheay0twKtgoj_RVMFToAsxaj0U86qKCMXhOZc4";
-const listUrl = `https://api.unsplash.com/photos/random/?client_id=${apiKey}&count=${count}`;
 
 function imgLoad() {
   initialLoad++;
@@ -27,10 +26,13 @@ search.addEventListener("input", (e) => {
   query = e.target.value;
 });
 
-const getImgs = async () => {
-  const resp = await fetch(listUrl);
-  const photoArr = await resp.json();
-  console.log(photoArr);
+const gettingImages = async (url) => {
+  const resp = await fetch(url);
+  const data = await resp.json();
+  return data;
+};
+
+const displayImgs = (photoArr) => {
   totalLoad = photoArr.length;
   photoArr.forEach((photo) => {
     const imgDiv = document.createElement("div");
@@ -39,35 +41,32 @@ const getImgs = async () => {
     imgLoad();
     gallery.appendChild(imgDiv);
   });
+};
+
+const getImgs = async () => {
+  initialLoad = 0;
+  const url = `https://api.unsplash.com/photos/random/?client_id=${apiKey}&count=${count}`;
+  const photoArr = await gettingImages(url);
+  displayImgs(photoArr);
 };
 
 const searchImgs = async (e) => {
   loader.hidden = true;
   e.preventDefault();
-  const resp = await fetch(
-    `https://api.unsplash.com//search/photos/?client_id=${apiKey}&query=${query}&per_page=15&page=1`
-  );
-  const photoObj = await resp.json();
+  const url = `https://api.unsplash.com//search/photos/?client_id=${apiKey}&query=${query}&per_page=15&page=1`;
+  const photoObj = await gettingImages(url);
   const photoArr = photoObj.results;
-  totalLoad = photoArr.length;
+  displayImgs(photoArr);
 
-  console.log(totalLoad);
-  photoArr.forEach((photo) => {
-    const imgDiv = document.createElement("div");
-    imgDiv.innerHTML = `<img src=${photo.urls.regular} alt=${photo.alt_description} />
-    <p> ${photo.user.first_name} ${photo.user.last_name}</p>`;
-    imgLoad();
-    gallery.appendChild(imgDiv);
-
-    search.value = "";
-  });
+  search.value = "";
 };
 
 window.addEventListener("scroll", () => {
   if (
-    window.scrollY + window.innerHeight >= document.body.offsetHeight - 400 &&
+    window.scrollY + window.innerHeight >= document.body.offsetHeight - 1000 &&
     ready
   ) {
+    ready = false;
     getImgs();
   }
 });
