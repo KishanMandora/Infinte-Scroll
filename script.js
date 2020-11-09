@@ -23,10 +23,8 @@ function imgLoad() {
 
 search.addEventListener("input", (e) => {
   loader.hidden = false;
-  e.preventDefault();
   gallery.innerHTML = "";
   query = e.target.value;
-  console.log(query);
 });
 
 const getImgs = async () => {
@@ -44,19 +42,15 @@ const getImgs = async () => {
 };
 
 const searchImgs = async (e) => {
-  console.log("click");
   loader.hidden = true;
   e.preventDefault();
-
-  ready = false;
   const resp = await fetch(
     `https://api.unsplash.com//search/photos/?client_id=${apiKey}&query=${query}&per_page=15&page=1`
   );
   const photoObj = await resp.json();
   const photoArr = photoObj.results;
-  console.log(photoArr);
-
   totalLoad = photoArr.length;
+
   console.log(totalLoad);
   photoArr.forEach((photo) => {
     const imgDiv = document.createElement("div");
@@ -74,9 +68,6 @@ window.addEventListener("scroll", () => {
     window.scrollY + window.innerHeight >= document.body.offsetHeight - 400 &&
     ready
   ) {
-    console.log("scrollY", window.scrollY);
-    console.log("innerH", window.innerHeight);
-    console.log("bodyH", document.body.offsetHeight);
     getImgs();
   }
 });
